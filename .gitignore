@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.env
+
+### Local Maven repo (sandbox/CI only) ###
+.m2-local/
+
+### buf generated Java code (regenerate with `buf generate`) ###
+grpc-libs/src/main/java/

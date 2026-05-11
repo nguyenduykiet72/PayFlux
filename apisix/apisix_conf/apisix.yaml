@@ -1,0 +1,19 @@
+routes:
+  - uri: /v1/payments/*
+    upstream:
+       nodes: { "host.docker.internal:8081": 1 }
+    plugins:
+       key-auth: {}
+       limit-count:
+         count: 100
+         time_window: 1
+         key_type: var
+         key: consumer_name
+         policy: redis
+         redis_host: redis
+         redis_port: 6379
+       opentelemetry: {}
+consumers:
+   - username: merchant_demo
+     plugins:
+       key-auth: { key: "demo-secret-key" }

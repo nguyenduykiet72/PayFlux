@@ -1,0 +1,11 @@
+version: v2
+modules:
+  - path: ./src/main/proto
+lint:
+  use:
+    - STANDARD
+  except:
+    - PACKAGE_VERSION_SUFFIX
+
+  enum_zero_value_suffix: _UNSPECIFIED
+  service_suffix: Service

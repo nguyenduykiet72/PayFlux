@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package payflux.v1;
+
+import "payflux/v1/common.proto";
+
+option java_package = "com.payflux.grpc.v1";
+option java_multiple_files = true;
+option java_outer_classname = "PaymentServiceProto";
+
+message ProcessPaymentRequest {
+  string merchant_id = 1;
+  string idempotency_key = 2;
+  Money amount = 3;
+  string return_url = 4;
+  map<string, string> metadata = 5;
+}
+
+message ProcessPaymentResponse {
+  string payment_id = 1;
+  string provider_txn_id = 2;
+  PaymentStatus status = 3;
+  string redirect_url = 4;
+}
+
+message RefundPaymentRequest {
+  string payment_id = 1;
+  Money amount = 2;
+  string reason = 3;
+}
+
+message RefundPaymentResponse {
+  string refund_id = 1;
+  PaymentStatus status = 2;
+}
+
+message CheckStatusRequest {
+  string payment_id = 1;
+}
+
+message CheckStatusResponse {
+  PaymentStatus status = 1;
+  string provider_txn_id = 2;
+}
+
+service PaymentProviderService {
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc RefundPayment(RefundPaymentRequest) returns (RefundPaymentResponse);
+  rpc CheckStatus(CheckStatusRequest) returns (CheckStatusResponse);
+}
