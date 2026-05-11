@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package payflux.v1;
+
+option java_package = "com.payflux.grpc.v1";
+option java_multiple_files = true;
+option java_outer_classname = "CommonProto";
+
+message Money {
+  string currency = 1;
+  int64 amount_minor = 2;
+}
+
+enum PaymentStatus {
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  PAYMENT_STATUS_PENDING = 1;
+  PAYMENT_STATUS_AUTHORIZED = 2;
+  PAYMENT_STATUS_CAPTURED = 3;
+  PAYMENT_STATUS_FAILED = 4;
+  PAYMENT_STATUS_REFUNDED = 5;
+}
