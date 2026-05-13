@@ -10,7 +10,6 @@
 	</parent>
 
 	<artifactId>payment-orchestrator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>payment-orchestrator</name>
 	<description/>
 	<url/>
@@ -42,17 +41,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>4.0.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.mybatis.spring.boot</groupId>-->
+<!--			<artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--			<version>4.0.1</version>-->
+<!--		</dependency>-->
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator-test</artifactId>
@@ -68,11 +67,16 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter-test</artifactId>
 			<version>4.0.1</version>
 			<scope>test</scope>
+		</dependency> -->
+		<dependency>
+			<groupId>com.payflux</groupId>
+			<artifactId>shared-libs</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
