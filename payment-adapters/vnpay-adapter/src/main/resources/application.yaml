@@ -1,0 +1,43 @@
+spring:
+    application:
+        name: vnpay-adapter
+    threads:
+        virtual:
+            enabled: true
+
+server:
+    port: 8091
+
+grpc:
+    server:
+        port: 9101
+        address: 0.0.0.0
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health,info,prometheus
+    endpoint:
+        health:
+            probes:
+                enabled: true
+
+# otel:
+#   metrics:
+#     export:
+#       prometheus:
+#         step: 10s
+
+payflux:
+    shared:
+        web:
+            exception-handler-enabled: true
+        observability:
+            correlation-id-enabled: true
+            execution-time-aspect-enabled: true
+
+logging:
+    level:
+        "[net.devh.boot.grpc]": info
+        "[io.grpc]": info
