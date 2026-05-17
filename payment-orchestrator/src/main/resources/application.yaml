@@ -1,0 +1,36 @@
+spring:
+    application:
+        name: payment-orchestrator
+    threads:
+        virtual:
+            enabled: true
+
+server:
+    port: 8081
+
+grpc:
+    client:
+        vnpay-adapter:
+            address: static://localhost:9101
+            negotiation-type: plaintext
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include:
+                    - health
+                    - info
+                    - prometheus
+
+payflux:
+    shared:
+        web:
+            exception-handler-enabled: true
+        observability:
+            correlation-id-enabled: true
+            # execution-time-aspect-enabled: true
+
+logging:
+    level:
+        "[net.devh.boot.grpc]": info
