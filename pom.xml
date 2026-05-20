@@ -34,6 +34,8 @@
 		<module>grpc-libs</module>
 		<module>shared-libs</module>
 		<module>core-utils</module>
+
+		<module>libs/adapter-commons</module>
 	</modules>
 
 	<dependencyManagement>
@@ -79,6 +81,15 @@
                 <artifactId>grpc-server-spring-boot-starter</artifactId>
                 <version>${grpc-spring-starter.version}</version>
             </dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-bom -->
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>1.21.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -111,6 +122,7 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<parameters>true</parameters>
 					<compilerArgs>
 						<arg>--enable-preview</arg>
 					</compilerArgs>
