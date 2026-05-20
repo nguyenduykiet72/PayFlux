@@ -89,6 +89,25 @@ services:
       timeout: 5s
       retries: 5
 
+  flyway-payment:
+    image: flyway/flyway:12-alpine
+    container_name: payflux-flyway-payment
+    command:
+      - -url=jdbc:postgresql://postgres:5432/payflux_db
+      - -user=postgres
+      - -password=123456789
+      - -schemas=public
+      - -connectRetries=10
+      - migrate
+    volumes:
+      - ./payment-orchestrator/src/main/resources/db/migration:/flyway/sql:ro,z
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - payflux_network
+    restart: "no"
+
   redis:
     image: redis:8.0
     container_name: payflux-redis
