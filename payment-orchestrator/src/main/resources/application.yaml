@@ -1,13 +1,19 @@
 spring:
   application:
     name: payment-orchestrator
+  config:
+    import:
+      - "optional:file:./.env[.properties]"
+      # - "optional:file:./.env.local[.properties]"
+      - "optional:file:./payment-orchestrator/.env[.properties]"
+      # - "optional:file:./payment-orchestrator/.env.local[.properties]"
   threads:
     virtual:
       enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5678/payflux_db
-    username: postgres
-    password: 123456789
+    username: payflux_app
+    password: user_password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -17,7 +23,8 @@ spring:
       host: localhost
       port: 6379
   flyway:
-    enabled: false
+    #    enabled: false
+    enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
     schemas:
@@ -54,6 +61,8 @@ payflux:
       exception-handler-enabled: true
     observability:
       correlation-id-enabled: true
+  vnpay:
+    hash-secret: ${VNPAY_HASH_SECRET:}
 
 logging:
   level:

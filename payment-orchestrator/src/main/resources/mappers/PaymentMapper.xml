@@ -35,6 +35,10 @@
         WHERE merchant_id = #{merchantId} AND idempotency_key = #{idempotencyKey}
     </select>
 
+    <select id="findByTxnRefForIpn" resultMap="paymentResult">
+        SELECT * FROM payflux_find_payment_by_txn_ref(#{txnRef})
+    </select>
+
     <update id="updateStatus">
         UPDATE t_payments
         SET status = #{newStatus}, version = version + 1, updated_at = now()

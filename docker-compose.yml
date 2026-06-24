@@ -30,7 +30,7 @@ services:
       etcd:
         condition: service_healthy
     volumes:
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro,z
+      - ./apisix/apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro,z
     ports:
       - "9080:9080"
       - "9180:9180"
@@ -61,7 +61,7 @@ services:
       apisix:
         condition: service_healthy
     volumes:
-      - ./dashboard_conf/config.yaml:/usr/local/apisix-dashboard/conf/conf.yaml:ro,z
+      - ./apisix/dashboard_conf/config.yaml:/usr/local/apisix-dashboard/conf/conf.yaml:ro,z
     ports:
       - "9000:9000"
     networks:

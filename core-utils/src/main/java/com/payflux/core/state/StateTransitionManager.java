@@ -17,7 +17,7 @@ public final class StateTransitionManager {
 
     static {
         ALLOWED = new EnumMap<>(PaymentState.class);
-        ALLOWED.put(PaymentState.PENDING,    EnumSet.of(PaymentState.AUTHORIZED, PaymentState.FAILED, PaymentState.CANCELLED));
+        ALLOWED.put(PaymentState.PENDING,    EnumSet.of(PaymentState.AUTHORIZED, PaymentState.CAPTURED, PaymentState.CANCELLED));
         ALLOWED.put(PaymentState.AUTHORIZED, EnumSet.of(PaymentState.CAPTURED, PaymentState.CANCELLED, PaymentState.FAILED));
         ALLOWED.put(PaymentState.CAPTURED,   EnumSet.of(PaymentState.REFUNDED));
         ALLOWED.put(PaymentState.FAILED,     EnumSet.noneOf(PaymentState.class));
