@@ -17,6 +17,8 @@ public interface PaymentMapper {
     Optional<Payment> findByIdempotencyKey(@Param("merchantId") UUID merchantId,
             @Param("idempotencyKey") String idempotencyKey);
 
+    Optional<Payment> findByTxnRefForIpn(@Param("txnRef") String txnRef);
+
     int updateStatus(@Param("paymentId") UUID paymentId,
             @Param("newStatus") PaymentState newStatus,
             @Param("expectedVersion") int expectedVersion);
