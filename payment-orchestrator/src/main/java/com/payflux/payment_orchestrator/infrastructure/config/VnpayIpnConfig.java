@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(VnpayIpnProperties.class)
+@EnableConfigurationProperties({VnpayIpnProperties.class, MerchantMappingProperties.class})
 public class VnpayIpnConfig {
     @Bean
     public HmacSha512Signer vnpayIpnSigner(VnpayIpnProperties vnpayIpnProperties) {

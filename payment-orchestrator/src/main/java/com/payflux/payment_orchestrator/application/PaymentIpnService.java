@@ -35,7 +35,7 @@ public class PaymentIpnService {
             return new IpnResult("97", "Invalid signature");
         }
 
-        String txnRef = params.get("vpn_TxnRef");
+        String txnRef = params.get("vnp_TxnRef");
         String responseCode = params.get("vnp_ResponseCode");
 
         if(txnRef == null || txnRef.isBlank()) {

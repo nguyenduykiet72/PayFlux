@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: webhook-service
+  threads:
+    virtual:
+      enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: webhook-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+server:
+  port: 8084
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+payflux:
+  webhook:
+    idempotency-ttl: P7D
+    merchants:
+      11111111-1111-1111-1111-111111111111:
+        url: ${MERCHANT_DEMO_WEBHOOK_URL:http://localhost:8084/dev/webhook}
+        secret: ${MERCHANT_DEMO_WEBHOOK_SECRET:demo-webhook-secret}
+
+logging:
+  level:
+    "[com.payflux.webhook_service]": info
+    "[org.springframework.kafka]": info
