@@ -6,6 +6,7 @@ import com.payflux.core.tenant.TenantContext;
 import com.payflux.errorcode.CommonErrorCode;
 import com.payflux.exception.BusinessException;
 import com.payflux.payment_orchestrator.domain.Payment;
+import com.payflux.payment_orchestrator.infrastructure.persistence.OutboxEventMapper;
 import com.payflux.payment_orchestrator.infrastructure.persistence.PaymentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ import java.util.UUID;
 public class PaymentService {
     private final PaymentMapper mapper;
     private final IdempotencyService idempotencyService;
+    private final OutboxEventMapper outboxEventMapper;
+    private final OutboxEventFactory outboxEventFactory;
 
     @Transactional
     public Payment createPending(String idempotencyKey, long amountMinor, String currency, String provider) {
@@ -57,6 +60,17 @@ public class PaymentService {
                     "expectedVersion", String.valueOf(current.version())));
         }
 
-        return mapper.findById(paymentId).orElseThrow();
+        Payment updatedPayment = mapper.findById(paymentId).orElseThrow();
+        if (newState == PaymentState.CAPTURED) {
+            outboxEventMapper.insert(outboxEventFactory.paymentCaptured(updatedPayment));
+        }
+        return updatedPayment;
+    }
+
+    @Transactional(readOnly = true)
+    public Payment getById(UUID paymentId) {
+        return mapper.findById(paymentId)
+                .orElseThrow(() -> new BusinessException(CommonErrorCode.COMMON_NOT_FOUND,
+                        "Payment not found",null, Map.of("paymentId",paymentId.toString())));
     }
 }

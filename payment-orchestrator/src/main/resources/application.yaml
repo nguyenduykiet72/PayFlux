@@ -56,6 +56,9 @@ management:
           - prometheus
 
 payflux:
+  merchants:
+    by-consumer-user-name:
+      merchant_demo: 11111111-1111-1111-1111-111111111111
   shared:
     web:
       exception-handler-enabled: true
