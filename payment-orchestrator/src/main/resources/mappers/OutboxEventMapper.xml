@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.payflux.payment_orchestrator.infrastructure.persistence.OutboxEventMapper">
+
+    <insert id="insert">
+        INSERT INTO outbox_events (id, aggregate_id, event_type, payload)
+        VALUES (#{id}, #{aggregateId}, #{eventType}, CAST(#{payloadJson} AS jsonb))
+    </insert>
+
+</mapper>

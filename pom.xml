@@ -20,6 +20,7 @@
 		<grpc-spring-starter.version>3.1.0.RELEASE</grpc-spring-starter.version>
 		<protobuf.version>4.34.1</protobuf.version>
 		<resilience4j.version>2.2.0</resilience4j.version>
+		<wiremock.version>3.13.2</wiremock.version>
 	</properties>
 
 	<modules>
@@ -34,6 +35,8 @@
 		<module>grpc-libs</module>
 		<module>shared-libs</module>
 		<module>core-utils</module>
+
+		<module>libs/adapter-commons</module>
 	</modules>
 
 	<dependencyManagement>
@@ -79,6 +82,41 @@
                 <artifactId>grpc-server-spring-boot-starter</artifactId>
                 <version>${grpc-spring-starter.version}</version>
             </dependency>
+
+			<!-- Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-bom -->
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>1.21.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Internal libs -->
+			<dependency>
+				<groupId>com.payflux</groupId>
+				<artifactId>adapter-commons</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- Resilience4j -->
+			<dependency>
+				<groupId>io.github.resilience4j</groupId>
+				<artifactId>resilience4j-spring-boot3</artifactId>
+				<version>${resilience4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.github.resilience4j</groupId>
+				<artifactId>resilience4j-micrometer</artifactId>
+				<version>${resilience4j.version}</version>
+			</dependency>
+
+			<!-- WireMock for integration tests -->
+			<dependency>
+				<groupId>org.wiremock</groupId>
+				<artifactId>wiremock-standalone</artifactId>
+				<version>${wiremock.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -111,6 +149,7 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+					<parameters>true</parameters>
 					<compilerArgs>
 						<arg>--enable-preview</arg>
 					</compilerArgs>

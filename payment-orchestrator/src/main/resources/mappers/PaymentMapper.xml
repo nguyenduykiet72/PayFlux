@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.payflux.payment_orchestrator.infrastructure.persistence.PaymentMapper">
+
+    <resultMap id="paymentResult" type="com.payflux.payment_orchestrator.domain.Payment">
+        <constructor>
+            <idArg name="paymentId" column="id" javaType="java.util.UUID"/>
+            <arg name="merchantId" column="merchant_id" javaType="java.util.UUID"/>
+            <arg name="idempotencyKey" column="idempotency_key" javaType="java.lang.String"/>
+            <arg name="amountMinor" column="amount_minor" javaType="_long"/>
+            <arg name="currency" column="currency" javaType="java.lang.String"/>
+            <arg name="provider" column="provider" javaType="java.lang.String"/>
+            <arg name="status" column="status" javaType="com.payflux.core.state.PaymentState"/>
+            <arg name="version" column="version" javaType="_int"/>
+            <arg name="createdAt" column="created_at" javaType="java.time.Instant"/>
+            <arg name="updatedAt" column="updated_at" javaType="java.time.Instant"/>
+        </constructor>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO t_payments
+        (id, merchant_id, idempotency_key, amount_minor, currency, provider, status, version)
+        VALUES
+            (#{paymentId}, #{merchantId}, #{idempotencyKey}, #{amountMinor}, #{currency},
+             #{provider}, #{status}, #{version})
+    </insert>
+
+    <select id="findById" resultMap="paymentResult">
+        SELECT * FROM t_payments WHERE id = #{paymentId}
+    </select>
+
+    <select id="findByIdempotencyKey" resultMap="paymentResult">
+        SELECT * FROM t_payments
+        WHERE merchant_id = #{merchantId} AND idempotency_key = #{idempotencyKey}
+    </select>
+
+    <select id="findByTxnRefForIpn" resultMap="paymentResult">
+        SELECT * FROM payflux_find_payment_by_txn_ref(#{txnRef})
+    </select>
+
+    <update id="updateStatus">
+        UPDATE t_payments
+        SET status = #{newStatus}, version = version + 1, updated_at = now()
+        WHERE id = #{paymentId} AND version = #{expectedVersion}
+    </update>
+</mapper>

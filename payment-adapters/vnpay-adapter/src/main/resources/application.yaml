@@ -1,27 +1,39 @@
 spring:
-    application:
-        name: vnpay-adapter
-    threads:
-        virtual:
-            enabled: true
+  application:
+    name: vnpay-adapter
+
+  config:
+    # Loads service-local secrets in dev. In prod, .env.local is absent
+    # (use K8s Secret / Vault) — optional: prefix lets Spring boot OK.
+    # Path resolution: relative to JVM working directory.
+    # - IDE Run: working dir = module folder (payment-adapters/vnpay-adapter/) → matches.
+    # - `./mvnw spring-boot:run` from root: working dir = root → falls back to env var.
+    import:
+      - "optional:file:./.env[.properties]"
+      - "optional:file:./.env.local[.properties]"
+      - "optional:file:./payment-adapters/vnpay-adapter/.env[.properties]"
+      - "optional:file:./payment-adapters/vnpay-adapter/.env.local[.properties]"
+  threads:
+    virtual:
+      enabled: true
 
 server:
-    port: 8091
+  port: ${SERVER_PORT}
 
 grpc:
-    server:
-        port: 9101
-        address: 0.0.0.0
+  server:
+    port: 9101
+    address: 0.0.0.0
 
 management:
-    endpoints:
-        web:
-            exposure:
-                include: health,info,prometheus
-    endpoint:
-        health:
-            probes:
-                enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
 # otel:
 #   metrics:
@@ -30,14 +42,43 @@ management:
 #         step: 10s
 
 payflux:
-    shared:
-        web:
-            exception-handler-enabled: true
-        observability:
-            correlation-id-enabled: true
-            execution-time-aspect-enabled: true
+  shared:
+    web:
+      exception-handler-enabled: true
+    observability:
+      correlation-id-enabled: true
+      execution-time-aspect-enabled: true
+  vnpay:
+    tmn-code: ${VNPAY_TMN_CODE:}
+    hash-secret: ${VNPAY_HASH_SECRET:}
+    return-url: ${VNPAY_RETURN_URL:}
+    pay-url: ${VNPAY_PAY_URL:https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
+    api-url: ${VNPAY_API_URL:https://sandbox.vnpayment.vn/merchant_webapi/api/transaction}
+    version: "2.1.0"
+    command: "pay"
+    payment-expiry: PT15M
 
 logging:
-    level:
-        "[net.devh.boot.grpc]": info
-        "[io.grpc]": info
+  level:
+    "[net.devh.boot.grpc]": info
+    "[io.grpc]": info
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      vnpay:
+        failure-rate-threshold: 50
+        sliding-window-size: 20
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+  retry:
+    instances:
+      vnpay:
+        max-attempts: 3
+        wait-duration: 500ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - java.io.IOException
+          - org.springframework.web.client.ResourceAccessException
